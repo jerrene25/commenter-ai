@@ -135,17 +135,4 @@ oversized uploads, or a missing/unloadable model never crash the server.
 - Static analysis never gets merged into the AI output — it's always
   rendered in its own panel, sourced independently from `ast`/`pyflakes`.
 
-## Extending this project
-
-The codebase is intentionally modular so it can grow without major rewrites:
-
-- **New languages**: add a sibling to `services/lint_service.py` and a new
-  prompt template in `ai/prompt.py`.
-- **Different/multiple GGUF models**: `ai/model_loader.py` is the only
-  place that knows about file paths and load settings — point it at a new
-  model or extend it to support a model registry.
-- **Comment styles**: `ai/prompt.py` already accepts a `style` parameter
-  (`beginner` / `intermediate` / `advanced`); wire a frontend selector to it.
-- **Auth / cloud deployment**: routes in `app.py` are thin wrappers around
-  `services/` and `ai/`, so adding auth middleware or swapping Flask's dev
-  server for gunicorn doesn't require touching business logic.
+c.
