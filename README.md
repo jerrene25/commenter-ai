@@ -1,3 +1,13 @@
+---
+title: Commentary AI Code Commenter
+emoji: 🧠
+colorFrom: blue
+colorTo: gray
+sdk: docker
+app_port: 7860
+pinned: false
+--- 
+
 # Commentary — AI Python Code Auto-Commenter
 
 Commentary takes Python source code (pasted or uploaded) and returns the
