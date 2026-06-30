@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commentary — AI Python Code Commenter</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <span class="topbar__dot"></span>
+    <span class="topbar__name">Commentary</span>
+    <span class="topbar__tagline">AI code review, on your machine</span>
+  </div>
+  <div class="topbar__actions">
+    <span id="modelStatus" class="status-pill status-pill--unknown">checking model…</span>
+  </div>
+</header>
+
+<main class="layout">
+
+  <section class="panel panel--input">
+    <div class="panel__header">
+      <h2>Input</h2>
+      <div class="panel__header-actions">
+        <label class="btn btn--ghost" for="fileInput">
+          Upload .py
+          <input type="file" id="fileInput" accept=".py" hidden>
+        </label>
+        <button id="clearBtn" class="btn btn--ghost">Clear</button>
+      </div>
+    </div>
+    <div class="editor-wrap">
+      <textarea id="codeInput" class="editor" spellcheck="false" placeholder="# Paste Python code here, or upload a .py file…"></textarea>
+      <pre class="editor-highlight" aria-hidden="true"><code id="codeInputHighlight" class="language-python"></code></pre>
+    </div>
+    <div class="panel__footer">
+      <button id="generateBtn" class="btn btn--primary">
+        <span id="generateLabel">Generate Comments</span>
+        <span id="generateSpinner" class="spinner" hidden></span>
+      </button>
+      <span id="charCount" class="char-count">0 characters</span>
+    </div>
+  </section>
+
+  <section class="panel panel--output">
+    <div class="panel__header">
+      <h2>Commented Output</h2>
+      <div class="panel__header-actions">
+        <button id="copyBtn" class="btn btn--ghost" disabled>Copy</button>
+        <button id="downloadBtn" class="btn btn--ghost" disabled>Download</button>
+      </div>
+    </div>
+    <div class="editor-wrap">
+      <pre class="output-highlight"><code id="codeOutput" class="language-python"># Your AI-commented code will appear here.</code></pre>
+    </div>
+  </section>
+
+  <section class="panel panel--errors">
+    <div class="panel__header">
+      <h2>Errors &amp; Lint</h2>
+      <span id="issueCount" class="issue-count">0 issues</span>
+    </div>
+    <div id="issuesList" class="issues-list">
+      <p class="issues-empty">Run a check to see syntax errors, undefined names, and common mistakes here.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span>Runs entirely on a local LLM — no code leaves your machine.</span>
+</footer>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

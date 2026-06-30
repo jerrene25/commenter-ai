@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+*.egg-info/
+
+llama_weights/*.gguf
+uploads/*
+!uploads/.gitkeep
+
+.DS_Store
+*.log
+.idea/
+.vscode/
