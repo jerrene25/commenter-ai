@@ -1,32 +1,24 @@
 ---
 title: Commentary AI Code Commenter
-emoji: 🧠
+emoji: robot_face
 colorFrom: blue
 colorTo: gray
 sdk: docker
-app_port: 7860
+app_file: app.py
 pinned: false
---- 
+---
 
-# Commentary — AI Python Code Auto-Commenter
+# Commentary - AI Python Code Auto-Commenter
 
-Commentary takes Python source code (pasted or uploaded) and returns the
-same code with meaningful, AI-generated comments inserted above relevant
-lines and logical blocks. It runs entirely on a local LLM via
-`llama-cpp-python` — no code is sent to any external API. Static analysis
-(syntax errors, undefined names, unused imports) is shown separately from
-the AI commentary so the two concerns never get mixed up.
+Commentary takes Python source code and returns it with AI-generated comments inserted above relevant lines and logical blocks. It runs entirely on a local LLM via llama-cpp-python.
 
 ## Features
 
-- Paste code or upload a `.py` file
-- AI comments explain *why* code exists, not just *what* it says
-- Separate "Errors & Lint" panel powered by `ast` + `pyflakes`
-- Syntax-highlighted input/output editors, VS Code–style dark theme
+- Paste code or upload a .py file
+- AI comments explain why code exists, not just what it says
+- Separate Errors and Lint panel powered by ast and pyflakes
+- Syntax-highlighted input/output editors, dark theme
 - Copy or download the commented result
-- Clean REST API (`/comment`, `/lint`, `/health`) that's easy to reuse from
-  other clients
-- Model loads once at process startup, not per-request
 
 ## Project structure
 
