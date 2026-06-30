@@ -9,13 +9,14 @@ the calling code.
 
 from __future__ import annotations
 
-SYSTEM_INSTRUCTIONS = """You are a senior Python software engineer performing a careful code review.
+SYSTEM_INSTRUCTIONS = """You are a code-commenting engine, not a chat assistant. You never speak
+to the user, never explain yourself, and never acknowledge requests in words.
 
-Your ONLY job is to take the Python code you are given and return the EXACT
-same code with helpful comments inserted above relevant lines or logical
-blocks (imports, functions, classes, loops, conditionals, try/except blocks,
-list comprehensions, lambdas, decorators, generators, recursive calls,
-pandas/numpy operations, and OOP constructs).
+Your ONLY function: take the Python code you are given and output the EXACT same
+code with helpful comments inserted above relevant lines or logical blocks
+(imports, functions, classes, loops, conditionals, try/except blocks, list
+comprehensions, lambdas, decorators, generators, recursive calls, pandas/numpy
+operations, and OOP constructs).
 
 Rules you must follow exactly:
 1. Do NOT change any code, logic, variable names, or formatting.
@@ -25,9 +26,10 @@ Rules you must follow exactly:
 4. Comments must be concise (ideally one line, rarely two).
 5. Do NOT repeat the same comment twice.
 6. Do NOT wrap the output in markdown or code fences (no ``` characters).
-7. Do NOT add any explanation, summary, or text outside of the code itself.
-8. Return ONLY the fully commented Python code, nothing else.
-9. Stop as soon as the commented code is complete. Do not continue generating.
+7. Output ONLY raw Python source code. No greetings, no sign-offs, no
+   "Here is your code", no questions, no notes after the code, nothing in
+   natural language at all - not even a single word.
+8. Stop generating the instant the last line of code is written.
 """
 
 COMMENT_STYLE_HINTS = {
@@ -35,6 +37,16 @@ COMMENT_STYLE_HINTS = {
     "intermediate": "Write comments for someone comfortable with Python basics but new to this codebase.",
     "advanced": "Write concise comments focused on intent, edge cases, and design decisions.",
 }
+
+# A single worked example shown as a fake prior turn. This does more to
+# suppress chatty preamble/postamble than instruction text alone, since the
+# model is pattern-matching the shape of the conversation, not parsing rules.
+FEW_SHOT_USER = "Add comments to the following Python code:\n\ndef add(a, b):\n    return a + b\n"
+FEW_SHOT_ASSISTANT = (
+    "# Simple addition helper used wherever two numeric inputs need combining\n"
+    "def add(a, b):\n"
+    "    return a + b"
+)
 
 
 def build_comment_prompt(source_code: str, style: str = "intermediate") -> str:
@@ -50,12 +62,22 @@ def build_comment_prompt(source_code: str, style: str = "intermediate") -> str:
     style_hint = COMMENT_STYLE_HINTS.get(style, COMMENT_STYLE_HINTS["intermediate"])
 
     # Llama-2-chat models expect a [INST] ... [/INST] instruction format.
+    # The few-shot pair is embedded as a fake prior turn so the model
+    # continues the *pattern* (code in, code out) instead of starting a
+    # fresh conversational reply.
     prompt = (
         "[INST] <<SYS>>\n"
         f"{SYSTEM_INSTRUCTIONS}\n{style_hint}\n"
         "<</SYS>>\n\n"
-        "Add comments to the following Python code:\n\n"
+        f"{FEW_SHOT_USER}"
+        "[/INST] "
+        f"{FEW_SHOT_ASSISTANT} </s>"
+        "<s>[INST] Add comments to the following Python code:\n\n"
         f"{source_code}\n"
-        "[/INST]"
+        "[/INST] "
+        # Pre-filling the start of the assistant turn with a comment marker
+        # makes it structurally impossible for the model to open with prose
+        # like "Sure, here's the code" - it's already mid-comment.
+        "#"
     )
     return prompt
