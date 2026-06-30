@@ -1,6 +1,5 @@
 ---
 title: Commentary AI Code Commenter
-emoji: robot_face
 colorFrom: blue
 colorTo: gray
 sdk: docker
